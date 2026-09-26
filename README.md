@@ -185,15 +185,40 @@ curl -X POST http://localhost:8000/api/monuments \
   }'
 ```
 
-## 📸 Captures
+## 📸 Captures de pantalla
 
-> ⚠️ Afegeix aquí les teves captures. Recomanacions:
-> 1. Captura de la pàgina d'inici (`/`)
-> 2. Captura del cercador amb resultats (`/cerca?q=dalí`)
-> 3. Captura del mapa interactiu (`/mapa`)
-> 4. Captura del panell d'administració (`/admin`)
-> 5. GIF animat navegant per l'app
+### 🏠 Pàgina d'inici
+Interfície principal amb el cercador global i les targetes de les quatre províncies, amb paleta de colors inspirada en la Senyera (granate, ocre, cobalt).
 
+![Pàgina d'inici](./docs/screenshots/home.png)
+
+### 🔍 Cercador global
+Cerca en temps real sobre 9 taules: monuments, comarques, municipis, plats, festes, geografia, cultura i dites.
+
+![Cercador](./docs/screenshots/cerca.png)
+
+### 🗺️ Mapa interactiu
+Mapa Leaflet amb tots els monuments geolocalitzats i popups amb informació detallada.
+
+![Mapa](./docs/screenshots/mapa.png)
+
+### 📚 Sobre Catalunya
+Pàgina amb estadístiques, geografia, símbols culturals i dites catalanes.
+
+![Sobre](./docs/screenshots/sobre.png)
+
+### 🔐 Panell d'administració
+CRUD complet de monuments protegit amb Basic Auth.
+
+![Admin](./docs/screenshots/admin.png)
+
+---
+
+## 🎬 Demo en vídeo
+
+> ⬇️ *(Opcional)* Afegeix aquí un GIF animat o vídeo de 30-60 segons mostrant la navegació.
+
+![Demo](./docs/screenshots/demo.gif)
 ### Home
 ![Home](./docs/screenshots/home.png)
 
