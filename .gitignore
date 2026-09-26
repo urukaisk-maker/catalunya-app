@@ -1,0 +1,10 @@
+node_modules/
+npm-debug.log
+.env
+copia_seguridad.sql
+*.sql.bak
+data/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

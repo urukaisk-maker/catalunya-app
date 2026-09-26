@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Explorador de Catalunya</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffcc00 0%, #ffcc00 50%, #c60b1e 50%, #c60b1e 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  }
+  header h1 { font-size: 3em; margin-bottom: 10px; }
+  header p { font-size: 1.2em; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    border-top: 6px solid #c60b1e;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+  }
+  .card h2 {
+    color: #c60b1e;
+    margin-bottom: 12px;
+    font-size: 1.6em;
+  }
+  .card p { color: #333; line-height: 1.6; }
+  .loading, .error {
+    text-align: center;
+    color: #fff;
+    font-size: 1.4em;
+    padding: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Explorador de Catalunya</h1>
+  <p>Descobreix les quatre provincies</p>
+</header>
+<div id="contenidor" class="loading">Carregant provincies...</div>
+
+<script>
+  const contenidor = document.getElementById('contenidor');
+  fetch('http://localhost:5000/api/provincies')
+    .then(res => res.json())
+    .then(data => {
+      contenidor.className = 'grid';
+      contenidor.innerHTML = data.map(p => `
+        <div class="card">
+          <h2>${p.nom}</h2>
+          <p>${p.descripcio}</p>
+        </div>
+      `).join('');
+    })
+    .catch(err => {
+      contenidor.className = 'error';
+      contenidor.textContent = 'No s\'han pogut carregar les provincies.';
+      console.error(err);
+    });
+</script>
+</body>
+</html>

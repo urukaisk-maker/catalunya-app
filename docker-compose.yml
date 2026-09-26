@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: catalunya_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: catalunya_user
+      POSTGRES_PASSWORD: seny_i_rauxa
+      POSTGRES_DB: catalunya_db
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - catalunya_data:/var/lib/postgresql/data
+    networks:
+      - catalunya_net
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: catalunya_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - catalunya_net
+
+  frontend:
+    build: ./frontend
+    container_name: catalunya_frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - catalunya_net
+
+volumes:
+  catalunya_data:
+
+networks:
+  catalunya_net:
+    driver: bridge
