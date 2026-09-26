@@ -67,7 +67,7 @@ SELECT v.nom, c.id, v.latitud, v.longitud
 FROM (VALUES
 {','.join(files)}
 ) AS v(nom, comarca, latitud, longitud)
-JOIN comarques c ON c.nom = v.comarca
+LEFT JOIN comarques c ON unaccent(LOWER(c.nom)) = unaccent(LOWER(v.comarca))
 ON CONFLICT (nom) DO NOTHING;
 """
     return sql
@@ -119,6 +119,17 @@ def verificar():
     )
     total = count.stdout.strip()
     print(f"      Total de municipis a la BD: {total}")
+
+    # Quants municipis s'han quedat sense comarca?
+    sense_comarca = subprocess.run(
+        [
+            'docker', 'exec', '-i', 'catalunya_db',
+            'psql', '-U', 'catalunya_user', '-d', 'catalunya_db',
+            '-t', '-c', 'SELECT COUNT(*) FROM municipis WHERE comarca_id IS NULL;'
+        ],
+        capture_output=True, text=True, encoding='utf-8'
+    )
+    print(f"      Municipis sense comarca assignada: {sense_comarca.stdout.strip()}")
 
 
 def main():

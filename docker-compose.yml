@@ -8,11 +8,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-            - ./db/05_municipis_complets.sql:/docker-entrypoint-initdb.d/05_municipis.sql:ro
       - ./db/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
       - ./db/02_ampliacion_datos.sql:/docker-entrypoint-initdb.d/02_ampliacion.sql:ro
       - ./db/03_fix_municipis_monuments.sql:/docker-entrypoint-initdb.d/03_fix.sql:ro
       - ./db/04_contingut_final.sql:/docker-entrypoint-initdb.d/04_final.sql:ro
+      - ./db/05_municipis_complets.sql:/docker-entrypoint-initdb.d/05_municipis.sql:ro
       - catalunya_data:/var/lib/postgresql/data
     networks:
       - catalunya_net
