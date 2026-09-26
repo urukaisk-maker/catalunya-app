@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS comarques (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL UNIQUE,
     provincia_id INTEGER NOT NULL REFERENCES provincies(id) ON DELETE CASCADE,
-    capital VARCHAR(100)
+    capital VARCHAR(100),
+    descripcio TEXT
 );
 
 INSERT INTO comarques (nom, provincia_id, capital) VALUES
