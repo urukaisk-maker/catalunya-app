@@ -62,7 +62,7 @@
 
 <script>
   const contenidor = document.getElementById('contenidor');
-    fetch('http://localhost:5001/api/provincies')
+      fetch('/api/provincies')
     .then(res => res.json())
     .then(data => {
       contenidor.className = 'grid';

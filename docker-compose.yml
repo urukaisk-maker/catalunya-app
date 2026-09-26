@@ -1,30 +1,36 @@
-
-
 services:
   db:
     image: postgres:15-alpine
     container_name: catalunya_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: catalunya_user
-      POSTGRES_PASSWORD: seny_i_rauxa
-      POSTGRES_DB: catalunya_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - catalunya_data:/var/lib/postgresql/data
     networks:
       - catalunya_net
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   backend:
     build: ./backend
     container_name: catalunya_backend
     restart: unless-stopped
-    ports:
-      - "5001:5000"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      BACKEND_PORT: 5000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - catalunya_net
 
@@ -32,10 +38,20 @@ services:
     build: ./frontend
     container_name: catalunya_frontend
     restart: unless-stopped
-    ports:
-      - "8080:80"
     depends_on:
       - backend
+    networks:
+      - catalunya_net
+
+  proxy:
+    build: ./proxy
+    container_name: catalunya_proxy
+    restart: unless-stopped
+    ports:
+      - "${PROXY_PORT}:80"
+    depends_on:
+      - backend
+      - frontend
     networks:
       - catalunya_net
 

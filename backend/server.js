@@ -4,30 +4,87 @@ const { Pool } = require('pg');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const pool = new Pool({
   host: 'db',
   port: 5432,
-  user: 'catalunya_user',
-  password: 'seny_i_rauxa',
-  database: 'catalunya_db'
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB
 });
 
-app.get('/api/provincies', async (req, res) => {
+// ---------- HEALTHCHECK ----------
+app.get('/health', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM provincies ORDER BY id');
-    res.json(result.rows);
+    await pool.query('SELECT 1');
+    res.json({ status: 'ok', db: 'ok' });
   } catch (err) {
-    console.error('Error consultant la base de dades:', err);
-    res.status(500).json({ error: 'Error intern del servidor' });
+    res.status(503).json({ status: 'error', db: 'down' });
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('API Explorador de Catalunya funcionant');
+// ---------- PROVÍNCIES ----------
+app.get('/api/provincies', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT * FROM provincies ORDER BY id');
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor backend escoltant al port ${PORT}`);
+// ---------- COMARQUES (per província) ----------
+app.get('/api/provincies/:id/comarques', async (req, res) => {
+  try {
+    const r = await pool.query(
+      'SELECT * FROM comarques WHERE provincia_id = $1 ORDER BY nom',
+      [req.params.id]
+    );
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
+// ---------- MUNICIPIS (per comarca) ----------
+app.get('/api/comarques/:id/municipis', async (req, res) => {
+  try {
+    const r = await pool.query(
+      'SELECT * FROM municipis WHERE comarca_id = $1 ORDER BY nom',
+      [req.params.id]
+    );
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ---------- MONUMENTS (tots o filtrats) ----------
+app.get('/api/monuments', async (req, res) => {
+  try {
+    const { tipus } = req.query;
+    const sql = tipus
+      ? 'SELECT m.*, mu.nom AS municipi FROM monuments m JOIN municipis mu ON m.municipi_id = mu.id WHERE m.tipus = $1 ORDER BY m.nom'
+      : 'SELECT m.*, mu.nom AS municipi FROM monuments m JOIN municipis mu ON m.municipi_id = mu.id ORDER BY m.nom';
+    const r = await pool.query(sql, tipus ? [tipus] : []);
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ---------- CERCADOR GLOBAL ----------
+app.get('/api/cerca', async (req, res) => {
+  const q = `%${(req.query.q || '').toLowerCase()}%`;
+  try {
+    const r = await pool.query(`
+      SELECT 'provincia' AS tipus, id, nom, descripcio FROM provincies WHERE LOWER(nom) LIKE $1 OR LOWER(descripcio) LIKE $1
+      UNION ALL
+      SELECT 'comarca'   AS tipus, id, nom, capital AS descripcio FROM comarques WHERE LOWER(nom) LIKE $1
+      UNION ALL
+      SELECT 'municipi'  AS tipus, id, nom, NULL AS descripcio FROM municipis WHERE LOWER(nom) LIKE $1
+      UNION ALL
+      SELECT 'monument'  AS tipus, id, nom, descripcio FROM monuments WHERE LOWER(nom) LIKE $1 OR LOWER(descripcio) LIKE $1
+      LIMIT 50
+    `, [q]);
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/', (req, res) => res.send('API Explorador de Catalunya funcionant'));
+
+const PORT = process.env.BACKEND_PORT || 5000;
+app.listen(PORT, () => console.log(`Backend al port ${PORT}`));

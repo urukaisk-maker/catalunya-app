@@ -1,0 +1,13 @@
+# S'aplica automàticament en local. No s'hauria d'usar a producció.
+services:
+  db:
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  backend:
+    ports:
+      - "${BACKEND_HOST_PORT}:5000"
+
+  frontend:
+    ports:
+      - "${FRONTEND_HOST_PORT}:80"
