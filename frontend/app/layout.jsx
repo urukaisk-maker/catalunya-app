@@ -15,11 +15,12 @@ export default function RootLayout({ children }) {
           <p>Descobreix el territori, la cultura i el patrimoni</p>
         </header>
         <nav className="top">
-          <Link href="/">Inici</Link>
-          <Link href="/monuments">Monuments</Link>
-          <Link href="/gastronomia">Gastronomia</Link>
-          <Link href="/cultura">Cultura</Link>
-        </nav>
+  <Link href="/">Inici</Link>
+  <Link href="/comarques">Comarques</Link>
+  <Link href="/monuments">Monuments</Link>
+  <Link href="/gastronomia">Gastronomia</Link>
+  <Link href="/cultura">Cultura</Link>
+</nav>
         {children}
       </body>
     </html>
