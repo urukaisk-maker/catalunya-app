@@ -1,91 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap');
+
+/* =====================================================
+   PALETA CULTURAL CATALANA
+   ===================================================== */
+:root {
+  /* Senyera redefinida */
+  --granate: #7a1f2b;        /* Roig Priorat */
+  --granate-fosc: #5c1620;
+  --ocre: #d4a017;           /* Or suau */
+  --ocre-clar: #f0c94a;
+
+  /* Mediterrani */
+  --cobalt: #1e4d7b;
+  --cobalt-fosc: #143b60;
+  --turquesa: #4a90a4;
+
+  /* Terra i muntanya */
+  --musgo: #4a5d3f;
+  --pinya: #3a4a30;
+
+  /* Neutres */
+  --pedra: #8a8578;
+  --pedra-clar: #cfc9bc;
+  --crema: #f7f3ea;
+  --crema-fosc: #ece5d3;
+  --carta: #fdfbf6;
+  --tinta: #2a2620;
+  --tinta-suau: #6b6459;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: linear-gradient(135deg, #ffcc00 0%, #ffcc00 50%, #c60b1e 50%, #c60b1e 100%);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--tinta);
+  background-color: var(--crema);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(30,77,123,0.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(122,31,43,0.06) 0%, transparent 40%);
+  background-attachment: fixed;
   min-height: 100vh;
-  padding: 40px 20px;
-  color: #222;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Patró trencadís subtil */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  z-index: 0;
+  background-image:
+    linear-gradient(45deg, var(--cobalt) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--cobalt) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--granate) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--granate) 75%);
+  background-size: 28px 28px;
+  background-position: 0 0, 0 14px, 14px -14px, -14px 0;
+}
+
+body > * { position: relative; z-index: 1; }
+
+/* =====================================================
+   TIPOGRAFIA
+   ===================================================== */
+h1, h2, h3, h4 {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--tinta);
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
 header.site {
   text-align: center;
-  margin-bottom: 40px;
-  color: #fff;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  padding: 40px 20px 20px;
+  background:
+    linear-gradient(180deg, rgba(122,31,43,0.03) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-header.site h1 { font-size: 3em; margin-bottom: 8px; }
-header.site p  { font-size: 1.15em; }
 
+header.site h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(2em, 5vw, 3.2em);
+  color: var(--granate);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+header.site h1::before,
+header.site h1::after {
+  content: '◆';
+  color: var(--ocre);
+  font-size: 0.5em;
+  vertical-align: middle;
+  margin: 0 16px;
+  opacity: 0.7;
+}
+
+header.site > p {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--tinta-suau);
+  font-size: 1.05em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+/* =====================================================
+   NAVEGACIÓ — PILLS
+   ===================================================== */
 nav.top {
-  text-align: center;
-  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 20px;
+  max-width: 1200px;
+  margin: 0 auto 30px;
 }
-nav.top a {
-  color: #fff;
-  margin: 0 12px;
-  text-decoration: none;
-  font-weight: 600;
-  border-bottom: 2px solid transparent;
-  transition: border-color .2s;
-}
-nav.top a:hover { border-color: #fff; }
 
+nav.top a {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--cobalt);
+  text-decoration: none;
+  padding: 9px 20px;
+  border-radius: 999px;
+  background: var(--carta);
+  border: 1.5px solid var(--pedra-clar);
+  transition: all 0.25s ease;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+nav.top a:hover {
+  background: var(--cobalt);
+  color: #fff;
+  border-color: var(--cobalt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(30,77,123,0.25);
+}
+
+/* =====================================================
+   CONTAINER + TÍTOLS DE PÀGINA
+   ===================================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h1.page-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(1.6em, 3.5vw, 2.4em);
+  color: var(--granate);
+  text-align: center;
+  margin: 20px 0 40px;
+  padding-bottom: 16px;
+  position: relative;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+h1.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ocre), var(--granate), var(--cobalt));
+  border-radius: 2px;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 1.5em;
+  color: var(--cobalt);
+  margin: 45px 0 24px;
+  padding-left: 18px;
+  border-left: 4px solid var(--ocre);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* =====================================================
+   GRID
+   ===================================================== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 24px;
+  margin-bottom: 40px;
 }
 
+/* =====================================================
+   TARGETES
+   ===================================================== */
 .card {
-  background: #fff;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  border-top: 6px solid #c60b1e;
-  transition: transform .3s, box-shadow .3s;
+  background: var(--carta);
+  border-radius: 20px;
+  padding: 26px 24px;
+  box-shadow:
+    0 2px 8px rgba(42,38,32,0.06),
+    0 1px 2px rgba(42,38,32,0.04);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
   display: block;
 }
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--granate), var(--ocre), var(--cobalt));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 32px rgba(42,38,32,0.12),
+    0 4px 8px rgba(42,38,32,0.06);
+  border-color: var(--pedra-clar);
 }
+
+.card:hover::before { opacity: 1; }
+
 .card h2 {
-  color: #c60b1e;
-  margin-bottom: 10px;
-  font-size: 1.5em;
+  font-family: 'Cinzel', serif;
+  color: var(--granate);
+  font-size: 1.4em;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
-.card p { line-height: 1.55; }
 
-.card.small { padding: 18px; }
-.card.small h3 { color: #c60b1e; margin-bottom: 6px; font-size: 1.15em; }
-
-.back {
-  display: inline-block;
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 20px;
+.card h3 {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--cobalt);
+  font-size: 1.15em;
+  margin-bottom: 8px;
   font-weight: 600;
 }
-.back:hover { text-decoration: underline; }
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
+.card p {
+  color: var(--tinta-suau);
+  line-height: 1.6;
+  font-size: 0.95em;
 }
-h1.page-title {
+
+.card.small { padding: 20px; }
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+.badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.badge-provincia { background: var(--granate); color: #fff; }
+.badge-comarca   { background: var(--cobalt); color: #fff; }
+.badge-municipi  { background: var(--musgo); color: #fff; }
+.badge-monument  { background: var(--ocre); color: #3a2b00; }
+.badge-plat      { background: #b64a2f; color: #fff; }
+.badge-festa     { background: #8a3d6b; color: #fff; }
+.badge-geografia { background: var(--turquesa); color: #fff; }
+.badge-cultura   { background: #6b5b95; color: #fff; }
+.badge-dita      { background: var(--pedra); color: #fff; }
+
+/* =====================================================
+   SEARCHBAR
+   ===================================================== */
+.search-wrap {
+  max-width: 560px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.search-wrap input {
+  width: 100%;
+  padding: 14px 52px 14px 20px;
+  border-radius: 999px;
+  border: 1.5px solid var(--pedra-clar);
+  background: var(--carta);
+  font-family: 'Inter', sans-serif;
+  font-size: 1em;
+  color: var(--tinta);
+  outline: none;
+  transition: all 0.25s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.search-wrap input::placeholder {
+  color: var(--pedra);
+}
+
+.search-wrap input:focus {
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 4px rgba(30,77,123,0.12);
+}
+
+.search-wrap button {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--granate);
   color: #fff;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-wrap button:hover {
+  background: var(--granate-fosc);
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* =====================================================
+   SKELETON LOADER
+   ===================================================== */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--crema-fosc) 0%,
+    var(--carta) 50%,
+    var(--crema-fosc) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-bottom: 10px;
+}
+
+.skeleton-line.title { height: 20px; width: 60%; }
+.skeleton-line.text  { width: 100%; }
+.skeleton-line.short { width: 40%; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =====================================================
+   ESTATS
+   ===================================================== */
+.loading-state,
+.error-state,
+.empty-state {
   text-align: center;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  margin-bottom: 30px;
+  padding: 60px 20px;
+  color: var(--tinta-suau);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1em;
 }
-.section-title {
+
+.error-state { color: var(--granate); }
+
+/* =====================================================
+   BACK LINK
+   ===================================================== */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cobalt);
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--carta);
+  border: 1.5px solid var(--pedra-clar);
+  transition: all 0.2s;
+}
+
+.back:hover {
+  background: var(--cobalt);
   color: #fff;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-  margin: 35px 0 20px;
-  font-size: 1.6em;
+  border-color: var(--cobalt);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+footer.site-footer {
+  text-align: center;
+  padding: 50px 20px 30px;
+  margin-top: 60px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--tinta-suau);
+  font-size: 0.9em;
+}
+
+footer.site-footer .diamond {
+  color: var(--ocre);
+  font-size: 1.4em;
+  margin-bottom: 12px;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 640px) {
+  header.site h1::before,
+  header.site h1::after { display: none; }
+  nav.top a { padding: 8px 14px; font-size: 0.82em; }
+  .grid { grid-template-columns: 1fr; gap: 16px; }
+  .card { padding: 20px; }
 }

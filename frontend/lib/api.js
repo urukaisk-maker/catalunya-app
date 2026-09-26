@@ -17,3 +17,4 @@ export async function getProvincia(id) {
 }
 export const getPlats  = () => jget('/api/plats');
 export const getFestes = () => jget('/api/festes');
+export const getCerca = (q) => jget(`/api/cerca?q=${encodeURIComponent(q)}`);

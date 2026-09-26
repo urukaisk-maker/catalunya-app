@@ -1,37 +1,45 @@
-export const revalidate = 0;
+import { getCerca } from '@/lib/api';
+import Badge from '@/components/Badge';
 
-async function search(q) {
-  const baseUrl = process.env.BACKEND_URL || 'http://backend:5000';
-  const res = await fetch(baseUrl + '/api/cerca?q=' + encodeURIComponent(q), { cache: 'no-store' });
-  return res.json();
-}
+export const revalidate = 0;
 
 export default async function CercaPage({ searchParams }) {
   const q = searchParams.q || '';
-  const resultats = q ? await search(q) : [];
+  const resultats = q ? await getCerca(q) : [];
 
   return (
     <main className="container">
-      <h1 className="page-title">Resultats per: "{q}"</h1>
+      <h1 className="page-title">
+        {resultats.length} resultats
+      </h1>
+      {q && (
+        <p style={{
+          textAlign: 'center',
+          color: 'var(--tinta-suau)',
+          marginBottom: 30,
+          fontFamily: 'Montserrat, sans-serif'
+        }}>
+          per a <strong style={{ color: 'var(--granate)' }}>"{q}"</strong>
+        </p>
+      )}
+
       {resultats.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-          <p>Cap resultat trobat.</p>
+        <div className="empty-state">
+          <p>🔍 Cap resultat trobat.</p>
+          <p style={{ fontSize: '0.9em', marginTop: 12 }}>
+            Prova amb una altra paraula: monuments, comarques, plats...
+          </p>
         </div>
       ) : (
-        <>
-          <p style={{ textAlign: 'center', color: '#fff', marginBottom: 20 }}>
-            <strong>{resultats.length}</strong> resultats
-          </p>
-          <div className="grid">
-            {resultats.map((r, i) => (
-              <div key={r.tipus + '-' + r.id + '-' + i} className="card small">
-                <p style={{ fontSize: '.8em', color: '#999', textTransform: 'uppercase' }}>{r.tipus}</p>
-                <h3>{r.nom}</h3>
-                {r.descripcio && <p>{r.descripcio}</p>}
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="grid">
+          {resultats.map((r, i) => (
+            <div key={r.tipus + '-' + r.id + '-' + i} className="card small">
+              <Badge tipus={r.tipus}>{r.tipus}</Badge>
+              <h3>{r.nom}</h3>
+              {r.descripcio && <p>{r.descripcio}</p>}
+            </div>
+          ))}
+        </div>
       )}
     </main>
   );

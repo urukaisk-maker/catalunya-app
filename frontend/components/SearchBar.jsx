@@ -13,22 +13,15 @@ export default function SearchBar() {
   }
 
   return (
-    <form onSubmit={submit} style={{ maxWidth: 500, margin: '0 auto 20px', display: 'flex', gap: 8 }}>
+    <form onSubmit={submit} className="search-wrap">
       <input
         type="text"
-        placeholder="Cerca monuments, comarques, plats..."
+        placeholder="Cerca monuments, comarques, municipis, plats..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        style={{
-          flex: 1, padding: '10px 16px', borderRadius: 25,
-          border: '2px solid #fff', background: 'rgba(255,255,255,0.95)',
-          fontSize: '1em', outline: 'none'
-        }}
+        aria-label="Cercador global"
       />
-      <button type="submit" style={{
-        padding: '10px 20px', borderRadius: 25, border: 'none',
-        background: '#c60b1e', color: '#fff', fontWeight: 600, cursor: 'pointer'
-      }}>🔍</button>
+      <button type="submit" aria-label="Cercar">🔍</button>
     </form>
   );
 }
