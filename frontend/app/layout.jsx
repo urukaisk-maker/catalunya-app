@@ -17,6 +17,8 @@ export default function RootLayout({ children }) {
         <nav className="top">
           <Link href="/">Inici</Link>
           <Link href="/monuments">Monuments</Link>
+          <Link href="/gastronomia">Gastronomia</Link>
+          <Link href="/cultura">Cultura</Link>
         </nav>
         {children}
       </body>

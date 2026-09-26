@@ -15,3 +15,5 @@ export async function getProvincia(id) {
   const list = await getProvincies();
   return list.find(p => p.id === Number(id)) || null;
 }
+export const getPlats  = () => jget('/api/plats');
+export const getFestes = () => jget('/api/festes');

@@ -16,6 +16,31 @@ const pool = new Pool({
 
 // ---------- HEALTHCHECK ----------
 // ---------- COMARCA individual ----------
+// ---------- PLATS TRADICIONALS ----------
+app.get('/api/plats', async (req, res) => {
+  try {
+    const r = await pool.query(
+      `SELECT p.*, pr.nom AS provincia
+       FROM plats_tradicionals p
+       LEFT JOIN provincies pr ON p.provincia_id = pr.id
+       ORDER BY p.nom`
+    );
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ---------- FESTES I TRADICIONS ----------
+app.get('/api/festes', async (req, res) => {
+  try {
+    const r = await pool.query(
+      `SELECT f.*, pr.nom AS provincia
+       FROM festes_tradicions f
+       LEFT JOIN provincies pr ON f.provincia_id = pr.id
+       ORDER BY f.nom`
+    );
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/comarques/:id', async (req, res) => {
   try {
     const r = await pool.query(

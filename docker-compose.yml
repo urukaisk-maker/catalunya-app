@@ -34,7 +34,7 @@ services:
     networks:
       - catalunya_net
 
-    frontend:
+  frontend:
     build: ./frontend
     container_name: catalunya_frontend
     restart: unless-stopped
