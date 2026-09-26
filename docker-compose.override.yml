@@ -1,4 +1,3 @@
-# S'aplica automàticament en local. No s'hauria d'usar a producció.
 services:
   db:
     ports:
@@ -7,7 +6,3 @@ services:
   backend:
     ports:
       - "${BACKEND_HOST_PORT}:5000"
-
-  frontend:
-    ports:
-      - "${FRONTEND_HOST_PORT}:80"

@@ -15,6 +15,35 @@ const pool = new Pool({
 });
 
 // ---------- HEALTHCHECK ----------
+// ---------- COMARCA individual ----------
+app.get('/api/comarques/:id', async (req, res) => {
+  try {
+    const r = await pool.query(
+      `SELECT c.*, p.nom AS provincia
+       FROM comarques c JOIN provincies p ON c.provincia_id = p.id
+       WHERE c.id = $1`,
+      [req.params.id]
+    );
+    if (!r.rows[0]) return res.status(404).json({ error: 'No trobat' });
+    res.json(r.rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ---------- MONUMENTS per província ----------
+app.get('/api/provincies/:id/monuments', async (req, res) => {
+  try {
+    const r = await pool.query(
+      `SELECT mo.*, mu.nom AS municipi
+       FROM monuments mo
+       JOIN municipis mu ON mo.municipi_id = mu.id
+       JOIN comarques co ON mu.comarca_id = co.id
+       WHERE co.provincia_id = $1
+       ORDER BY mo.nom`,
+      [req.params.id]
+    );
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
