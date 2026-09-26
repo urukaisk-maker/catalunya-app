@@ -1,17 +1,19 @@
-name: CI — Validar docker-compose
+name: CI — Build i validació
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout del codi
+        uses: actions/checkout@v4
 
       - name: Crear .env de test
         run: |
@@ -25,6 +27,8 @@ jobs:
           FRONTEND_PORT=80
           FRONTEND_HOST_PORT=8080
           PROXY_PORT=8000
+          ADMIN_USER=admin
+          ADMIN_PASSWORD=test_admin_pw
           EOF
 
       - name: Validar sintaxi docker-compose
@@ -40,21 +44,38 @@ jobs:
         run: |
           for i in {1..30}; do
             if curl -sf http://localhost:8000/health; then
-              echo "Backend sa!"
+              echo "✅ Backend sa!"
               exit 0
             fi
-            echo "Esperant... ($i)"
+            echo "Esperant backend... ($i/30)"
             sleep 2
           done
-          echo "Timeout esperant el backend"
-          docker compose logs
+          echo "❌ Timeout esperant el backend"
+          docker compose logs backend
           exit 1
 
-      - name: Comprovar endpoint provincies
+      - name: Comprovar endpoints bàsics
         run: |
           curl -sf http://localhost:8000/api/provincies | grep -q Barcelona
-          echo "Endpoint OK"
+          echo "✅ /api/provincies OK"
+          curl -sf http://localhost:8000/api/comarques | grep -q Barcelonès
+          echo "✅ /api/comarques OK"
+          curl -sf "http://localhost:8000/api/cerca?q=dali" | grep -q "Dalí"
+          echo "✅ /api/cerca OK"
+
+      - name: Comprovar autenticació
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8000/api/monuments -H "Content-Type: application/json" -d '{"nom":"test"}')
+          if [ "$STATUS" != "401" ]; then
+            echo "❌ S'esperava 401 sense auth, s'ha rebut $STATUS"
+            exit 1
+          fi
+          echo "✅ Basic Auth funciona (401 sense credencials)"
 
       - name: Aturar serveis
         if: always()
         run: docker compose down -v
+
+      - name: Logs d'error (si falla)
+        if: failure()
+        run: docker compose logs --tail=50
